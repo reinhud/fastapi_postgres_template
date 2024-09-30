@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     container_name: postgres_container
@@ -8,8 +6,8 @@ services:
     restart: always
     ports:
       - "${POSTGRES_CONTAINER_PORT}:5432" 
-    volumes:    # dont use this in production, mounting docker volume to location on my machine where to store postgres data for docker
-      - ./docker_pg_data/postgres-data:/var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     env_file:
       - .env
     networks:
@@ -24,7 +22,7 @@ services:
     ports:
       - "5050:80"
     volumes:
-     - ./docker_pg_data/pgadmin-data:/var/lib/pgadmin
+     - pgadmin-data:/var/lib/pgadmin
     env_file:
       - .env
     depends_on:
@@ -54,6 +52,7 @@ services:
         ipv4_address: 192.168.0.4
 
 volumes:
+  pgdata:
   pgadmin-data:
 
 networks:
