@@ -1,7 +1,7 @@
 services:
   db:
-    container_name: postgres_container
-    hostname: postgres_container
+    container_name: postgres
+    hostname: postgres
     image: postgres:14
     restart: always
     ports:
@@ -16,7 +16,7 @@ services:
 
 
   pgadmin:
-    container_name: pgadmin4_container
+    container_name: pgadmin4
     image: dpage/pgadmin4
     restart: always
     ports:
@@ -33,7 +33,7 @@ services:
 
 
   fastapi_server:
-    container_name: fastapi_server_container
+    container_name: fastapi_server
     build: 
       context: ./fastapi_server
       dockerfile: Dockerfile
