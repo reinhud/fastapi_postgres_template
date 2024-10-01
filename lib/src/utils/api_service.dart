@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-const apiBaseURL = 'http://localhost:8000/';
+const apiBaseURL = 'http://localhost:8000/api/';
 
 class ApiService {
   String _url (String url) {
