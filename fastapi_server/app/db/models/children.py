@@ -1,17 +1,15 @@
-"""Sqlalchemy model for 'parent' table."""
+"""Sqlalchemy model for 'child' table."""
 from sqlalchemy import Column, Date, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import relationship
 
 from app.db.models.base import Base, BaseDBModel
-from app.db.models.metadata import metadata_family
 
 
 class Child(Base, BaseDBModel):
-    """ Database model representing 'parent' table in db.
+    """ Database model representing 'child' table in db.
     
-    'id' and 'tablename' are created automatically by 'BaseDBModel'.
+    'id' and 'tablename' are created automatically by 'BaseModel'.
     """
-    __metadata__ = metadata_family
 
     name = Column(String)
     birthdate = Column(Date)

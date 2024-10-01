@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 import pytest
 
 from app.db.models.children import Child as ChildModel
-from app.models.domain.children import ChildCreate, ChildInDB
+from app.schemas.domain.children import ChildCreate, ChildInDB
 
 
 ## ===== Valid Child 1 ===== ##

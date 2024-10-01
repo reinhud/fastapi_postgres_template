@@ -2,8 +2,9 @@
 
 Allows for pydantic validation via inheritence from pydantics 'BaseModel'
 """
+import datetime as dt
+import uuid
 from pydantic import BaseModel
-
 
 class BaseSchema(BaseModel):
     """Base pydantic schema for domain models.
@@ -14,8 +15,9 @@ class BaseSchema(BaseModel):
 
 class IDSchemaMixin(BaseModel):
     """Base pydantic schema to be inherited from by database schemata."""
-    id: int
+    id: uuid.UUID
+    created_at: dt.datetime
+    updated_at: dt.datetime
 
-    class Config(BaseModel.Config):
-        # allow database schematas mapping to ORM objects
-        orm_mode = True
+    class Config:
+        from_attributes = True

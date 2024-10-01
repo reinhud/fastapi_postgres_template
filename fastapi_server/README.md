@@ -75,7 +75,7 @@ and connect to it.
 
 ### Applying Database Migrations
 In testing, newest revision will be applied automatically before test runs.  
-To run migrations manually before spinning up the docker containers, go to ```/src``` and:
+To run migrations manually before spinning up the docker containers, go to ```/``` and:
 * Create new revision:
 ```
 docker-compose run fastapi_server alembic revision --autogenerate -m "The hottest new db changes around"

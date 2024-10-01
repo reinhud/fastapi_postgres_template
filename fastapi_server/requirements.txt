@@ -1,15 +1,16 @@
 # app
-fastapi==0.78.0
-pydantic==1.9.1
+fastapi==0.115.0
+pydantic==2.9.2
 uvicorn==0.18.2
 loguru==0.6.0
+fastapi-filter==2.0.0
 
 # db
-sqlalchemy==1.4.39  
-alembic==1.8.1
-psycopg2-binary==2.9.2    # for ddl in tets migrations
+sqlalchemy==2.0.35 
+alembic==1.13.3
+psycopg2-binary==2.9.2
 asyncpg==0.26.0
-sqlalchemy-utils==0.38.3
+sqlalchemy-utils==0.41.2
 greenlet==1.1.2
 
 # testing

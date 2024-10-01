@@ -2,27 +2,29 @@
 from abc import ABC
 from typing import List, TypeVar
 
+from fastapi_filter import FilterDepends
 from loguru import logger
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models.base import Base
-from app.models.base import BaseSchema
+from ..models.base import BaseModel
+from app.api.schemas.base import BaseSchema
+from app.api.filters.base import BaseFilter
 
 ## ===== Custom Type Hints ===== ##
 # sqlalchemy models
-SQLA_MODEL = TypeVar("SQLA_MODEL", bound=Base)
+SQLA_MODEL = TypeVar("SQLA_MODEL", bound=BaseModel)
 
 # pydantic models
 CREATE_SCHEMA = TypeVar("CREATE_SCHEMA", bound=BaseSchema)
-READ_OPTIONAL_SCHEMA = TypeVar("READ_OPTIONAL_SCHEMA", bound=BaseSchema)
-
+UPDATE_SCHEMA = TypeVar("UPDATE_SCHEMA", bound=BaseSchema)
+FILTER_SCHEMA = TypeVar("FILTER_SCHEMA", bound=BaseFilter)
 
 ## ===== CRUD Repo ===== ##
 class SQLAlchemyRepository(ABC):
     """Abstract SQLAlchemy repo defining basic database operations.
     
-    Basic CRUD methods used by domain models to interact with the
+    Basic CRUDL methods used by domain models to interact with the
     database are defined here.
     """
     def __init__(
@@ -35,9 +37,10 @@ class SQLAlchemyRepository(ABC):
     sqla_model = SQLA_MODEL
 
     create_schema =  CREATE_SCHEMA
-    read_optional_schema = READ_OPTIONAL_SCHEMA
+    update_schema = UPDATE_SCHEMA
+    filter_schema = FILTER_SCHEMA
 
-    ## ===== Basic Crud Operations ===== ##
+    ## ===== Basic crudl Operations ===== ##
     async def create(
         self, 
         obj_new: create_schema
@@ -48,7 +51,7 @@ class SQLAlchemyRepository(ABC):
             self.db.add(db_obj_new)
 
             await self.db.commit()
-            await self.db.refresh(db_obj_new)
+            await self.db.refresulth(db_obj_new)
             
             logger.success(f"Created new entity: {db_obj_new}.")
 
@@ -64,32 +67,36 @@ class SQLAlchemyRepository(ABC):
             return None
 
 
-    async def read_by_id(
+    async def read(
         self,
         id: int,
     ) -> sqla_model | None:
         """Get object by id or return None."""
-        res = await self.db.get(self.sqla_model, id)
+        result = await self.db.get(self.sqla_model, id)
         
-        return res
+        return result
 
 
-    async def read_optional(
+    async def update(
         self,
-        query_schema: read_optional_schema,
-    ) -> List[sqla_model] | None:
-        """Get list of all objects that match with query_schema.
-        
-        If values in query schema are not provided, they will default to None and
-        will not be searched for. To search for None values specifically provide
-        desired value set to None.
-        """
-        filters: dict = query_schema.dict(exclude_none=True)
-        stmt = select(self.sqla_model).filter_by(**filters).order_by(self.sqla_model.id)
+        id: int,
+        obj_update: update_schema,
+    ) -> sqla_model | None:
+        """Update object in db by id or None if object not found in db"""
+        result = await self.db.get(self.sqla_model, id)
+        if result:
+            for key, value in obj_update.dict().items():
+                setattr(result, key, value)
 
-        res = await self.db.execute(stmt)
+            await self.db.commit()
+            await self.db.refresulth(result)
 
-        return res.scalars().all()
+            logger.success(f"Updated entity: {result}.")
+
+        else:
+            logger.error(f"Object with id = {id} not found in query")
+
+        return result
 
 
     async def delete(
@@ -97,15 +104,27 @@ class SQLAlchemyRepository(ABC):
         id: int,
     ) -> sqla_model | None:
         """Delete object from db by id or None if object not found in db"""
-        res = await self.db.get(self.sqla_model, id)
-        if res:
+        result = await self.db.get(self.sqla_model, id)
+        if result:
 
-            await self.db.delete(res)
+            await self.db.delete(result)
             await self.db.commit()
 
-            logger.success("Entitiy: {res} successfully deleted from database.")
+            logger.success("Entitiy: {result} successfully deleted from database.")
 
         else:
             logger.error(f"Object with id = {id} not found in query")
 
-        return res
+        return result
+    
+
+    async def list(
+        self,
+        list_filter: filter_schema = FilterDepends(filter_schema),
+    ) -> List[sqla_model] | None:
+        """Get all filtered objects from the database."""
+        query = select(self.sqla_model)
+        query = list_filter.filter(query)
+        query = list_filter.sort(query)
+        result = await self.db.execute(query)
+        return result.scalars().all()

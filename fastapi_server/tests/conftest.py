@@ -25,7 +25,7 @@ from app.core.config import get_app_settings
 from app.db.db_session import get_async_engine
 from app.db.models.base import Base
 from app.fastapi_server import app
-from app.models.base import BaseSchema
+from app.schemas.base import BaseSchema
 
 
 InDB_SCHEMA = TypeVar("InDB_SCHEMA", bound=BaseSchema)

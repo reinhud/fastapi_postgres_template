@@ -6,9 +6,8 @@ from loguru import logger
 
 from app.api.dependencies.repository import get_repository
 from app.db.repositories.parents import ParentRepository
-from app.models.domain.parents import ParentCreate, ParentInDB
-from app.models.domain.children import ChildInDB
-from app.models.utility_schemas.parents import ParentOptionalSchema
+from ..schemas.parents import ParentCreate, ParentInDB, ParentOptionalSchema
+from ..schemas.children import ChildInDB
 
 
 router = APIRouter()
@@ -16,8 +15,8 @@ router = APIRouter()
 
 # Basic Parent Endpoints
 # =========================================================================== #
-@router.post("/post", response_model=ParentInDB, name="parents: create-parent", status_code=status.HTTP_201_CREATED)
-async def post_parent(
+@router.post("/", response_model=ParentInDB, name="parents: create-parent", status_code=status.HTTP_201_CREATED)
+async def create_parent(
     parent_new: ParentCreate,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> ParentInDB:
@@ -25,8 +24,9 @@ async def post_parent(
 
     return parent_created
 
-@router.get("/get_by_id", response_model=ParentInDB | None, name="parents: read-one-parent")
-async def get_one_parent(
+
+@router.get("/{id}", response_model=ParentInDB | None, name="parents: read-one-parent")
+async def read_parent(
     id: int,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> ParentInDB | None:
@@ -37,19 +37,22 @@ async def get_one_parent(
 
      return parent_db
 
-@router.post("/get_optional", name="parents: read-optional-parents")    #, response_model=List[ParentInDB] | None
-async def get_optional_parents(
-    query_schema: ParentOptionalSchema,
+
+@router.patch("/{id}", response_model=ParentInDB, name="parents: update-parent")
+async def update_parent(
+    id: int,
+    parent_update: ParentOptionalSchema,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
-) -> List[ParentInDB] | None:
-    parents_db = await parent_repo.read_optional(query_schema=query_schema)
-    if not parents_db:
-        logger.warning(f"No Pprents found.")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No parents matching query: {query_schema.dict(exclude_none=True)}.")
+) -> ParentInDB:
+    parent_updated = await parent_repo.update(id=id, obj_update=parent_update)
+    if not parent_updated:
+        logger.warning(f"No parent with id = {id}.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Unable to update parent with id = {id}, Parent not found")
 
-    return parents_db
+    return parent_updated
 
-@router.delete("/delete", response_model=ParentInDB, name="parents: delete-parent")
+
+@router.delete("/{id}", response_model=ParentInDB, name="parents: delete-parent")
 async def delete_parent(
     id: int,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
@@ -61,6 +64,13 @@ async def delete_parent(
 
     return parent_deleted
 
+
+@router.get("/", response_model=List[ParentInDB] | None, name="parents: get all parents")
+async def list_parents(
+    parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
+) -> List[ParentInDB]:
+    parents = await parent_repo.list_all()
+    return parents
 
 
 # Basic relationship pattern endpoint

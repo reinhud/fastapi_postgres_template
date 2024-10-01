@@ -6,7 +6,7 @@ from fastapi.encoders import jsonable_encoder
 import pytest
 
 from app.db.models.parents import Parent as ParentModel
-from app.models.domain.parents import ParentCreate, ParentInDB
+from app.schemas.domain.parents import ParentCreate, ParentInDB
 
 
 ## ===== Valid Parent 1 ===== ##

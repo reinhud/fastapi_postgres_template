@@ -10,24 +10,25 @@ from sqlalchemy.orm import selectinload
 from app.db.models.parents import Parent as ParentModel
 from app.db.models.children import Child as ChildModel
 from app.db.repositories.base import SQLAlchemyRepository
-from app.models.domain.parents import ParentCreate
-from app.models.utility_schemas.parents import ParentOptionalSchema
+from app.api.schemas.parents import ParentCreate, ParentUpdate
+from app.api.filters.parents import ParentFilter
 
 
 class ParentRepository(SQLAlchemyRepository):
     """Handle all logic related to Parent entity.
     
     Inheritence from 'SQLAlchemyRepository' allows for 
-    crud functionality, only schemata and models used have to be defined.
+    crudl functionality, only schemata and models used have to be defined.
     """
     sqla_model = ParentModel
 
     create_schema = ParentCreate
-    read_optional_schema = ParentOptionalSchema
+    update_schema = ParentUpdate
+    filter_schema = ParentFilter
 
 
     # Testing relationship patterns are working
-    async def get_parent_children_by_id(
+    async def get_children_by_parent_id(
         self,
         id,
     ) -> List[sqla_model] | None:

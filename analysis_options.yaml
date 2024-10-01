@@ -21,8 +21,12 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    # While learning flutter it is distracting to have to add/remove const all the time.
+    prefer_const_constructors_in_immutables: false
+    prefer_const_constructors: false
+    prefer_const_literals_to_create_immutables: false
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
