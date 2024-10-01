@@ -1,5 +1,5 @@
 """Sqlalchemy model for 'child' table."""
-from sqlalchemy import Column, Date, ForeignKey, Numeric, String, UUID
+from sqlalchemy import Column, Date, ForeignKey, String, UUID
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -13,7 +13,6 @@ class Child(Base):
 
     name = Column(String)
     birthdate = Column(Date)
-    height = Column(Numeric)
     hobby= Column(String)
     parent_id = Column(UUID, ForeignKey("parent.id"))
     parent = relationship("Parent", back_populates="children")

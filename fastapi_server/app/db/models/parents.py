@@ -17,6 +17,5 @@ class Parent(Base):
 
     name = Column(String)
     birthdate = Column(Date)
-    height = Column(Numeric)
 
     children = relationship("Child", back_populates="parent")
