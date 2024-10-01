@@ -14,6 +14,8 @@ class ChildRepository(SQLAlchemyRepository):
     Inheritence from 'SQLAlchemyRepository' allows for 
     crudl functionality, only schemata and models used have to be defined.
     """
+    label = "child"
+    
     sqla_model = ChildModel
 
     create_schema = ChildCreate

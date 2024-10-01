@@ -1,9 +1,9 @@
 # app
 fastapi==0.115.0
-pydantic==2.9.2
-uvicorn==0.18.2
-loguru==0.6.0
 fastapi-filter==2.0.0
+loguru==0.6.0
+pydantic==2.9.2
+uvicorn==0.31.0
 
 # db
 sqlalchemy==2.0.35 

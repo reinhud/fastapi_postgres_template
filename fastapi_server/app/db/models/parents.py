@@ -6,10 +6,10 @@ representing a simple 'ONe-To-Many' relationship pattern.
 from sqlalchemy import Column, Date, Numeric, String
 from sqlalchemy.orm import relationship
 
-from app.db.models.base import Base, BaseDBModel
+from .base import Base
 
 
-class Parent(Base, BaseDBModel):
+class Parent(Base):
     """ Database model representing 'parent' table in db.
     
     'id' and 'tablename' are created automatically by 'BaseModel'.

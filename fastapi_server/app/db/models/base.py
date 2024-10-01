@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import declarative_base
 
 
-class BaseModel(object):  
+class BaseModel:  
     """Class defining common db model components."""
     id = Column(UUID, primary_key=True, index=True, default=uuid.uuid4)
     created_at = Column(TIMESTAMP(timezone=True), default=dt.datetime.now())
@@ -27,5 +27,5 @@ class BaseModel(object):
     # triggering an expired load
     __mapper_args__ = {"eager_defaults": True}
 
-
 Base = declarative_base(cls=BaseModel)
+
