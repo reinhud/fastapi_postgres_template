@@ -1,5 +1,6 @@
 """Pydantic domain models for 'children' ressource."""
 import datetime as dt
+import uuid
 from typing import Optional
 
 from .base import BaseSchema, IDSchemaMixin
@@ -10,7 +11,7 @@ class ChildBase(BaseSchema):
     name: str
     birthdate: Optional[dt.date]
     hobby: Optional[str]
-    parent_id: int
+    parent_id: uuid.UUID
 
 class ChildInDB(ChildBase, IDSchemaMixin):
     """Schema for 'child' in database."""

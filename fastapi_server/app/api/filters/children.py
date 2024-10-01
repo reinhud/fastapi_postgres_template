@@ -1,4 +1,5 @@
 import datetime as dt
+import uuid
 from typing import Optional
 
 from fastapi_filter.contrib.sqlalchemy import Filter
@@ -13,7 +14,7 @@ class ChildFilter(BaseFilter):
     birthdate__gte: Optional[dt.date] = None
     birthdate__lte: Optional[dt.date] = None
     hobby: Optional[str] = None
-    parent_id: Optional[int] = None
+    parent_id: Optional[uuid.UUID] = None
 
     order_by: list[str] = ["name"]
     search: Optional[str] = None

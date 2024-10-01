@@ -1,4 +1,5 @@
 """Endpoints for 'children' ressource."""
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
@@ -29,7 +30,7 @@ async def create_child(
 
 @router.get("/{child_id}", response_model=ChildWithParent | None)
 async def read_child(
-    child_id: int,
+    child_id: uuid.UUID,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB | None:
      result = await child_repo.read(id=child_id)
@@ -37,7 +38,7 @@ async def read_child(
 
 @router.patch("/{child_id}", response_model=ChildInDB)
 async def update_child(
-    child_id: int,
+    child_id: uuid.UUID,
     child_update: ChildUpdate,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB:
@@ -46,7 +47,7 @@ async def update_child(
     
 @router.delete("/{child_id}", response_model=ChildInDB)
 async def delete_child(
-    child_id: int,
+    child_id: uuid.UUID,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB:
     result = await child_repo.delete(id=child_id)
