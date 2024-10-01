@@ -11,5 +11,5 @@ class BaseFilter(SQLAlchemyFilter):
     updated_at__gte: datetime | None = None
     updated_at__lte: datetime | None = None
     
-    # Default sorting by updated_at with newest first
+    # Default sorting by updated_at with most recent first
     order_by: list[str] | None = ['-updated_at']
