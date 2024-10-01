@@ -15,7 +15,7 @@ class ParentFilter(BaseFilter):
     birthdate__gte: Optional[dt.date] = None
     birthdate__lte: Optional[dt.date] = None
 
-    # order_by: list[str] = None
+    order_by: list[str] = ["name"]
     search: Optional[str] = None
 
     class Constants(Filter.Constants):
