@@ -60,7 +60,7 @@ class SQLAlchemyRepository(ABC):
             self.db.add(db_obj_new)
 
             await self.db.commit()
-            await self.db.refresulth(db_obj_new)
+            await self.db.refresh(db_obj_new)
             
             logger.success(f"Created new {self.label}: {db_obj_new}.")
 
@@ -102,7 +102,7 @@ class SQLAlchemyRepository(ABC):
             setattr(result, key, value)
 
         await self.db.commit()
-        await self.db.refresulth(result)
+        await self.db.refresh(result)
 
         logger.success(f"Updated {self.label}: {result}.")
 
