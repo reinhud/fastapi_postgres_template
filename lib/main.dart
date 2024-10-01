@@ -1,8 +1,13 @@
+import 'package:family/src/parent/parent_form_provider.dart';
+import 'package:family/src/parent/parents_list_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
+
+GetIt getIt = GetIt.instance;
 
 void main() async {
   // Set up the SettingsController, which will glue user settings to multiple
@@ -13,8 +18,23 @@ void main() async {
   // This prevents a sudden theme change when the app is first displayed.
   await settingsController.loadSettings();
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  setupSingletons();
+
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
   runApp(MyApp(settingsController: settingsController));
+}
+
+void setupSingletons() {
+  getIt.registerSingleton<ParentsListProvider>(
+    ParentsListProviderImpl(),
+    signalsReady: true,
+  );
+  getIt.registerSingleton<ParentFormProvider>(
+    ParentFormProviderImpl(),
+    signalsReady: true,
+  );
 }
