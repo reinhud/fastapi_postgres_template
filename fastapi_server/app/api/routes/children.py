@@ -24,14 +24,16 @@ async def create_child(
     child_new: ChildCreate,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB:
-    return await child_repo.create(obj_new=child_new)
+    result = await child_repo.create(obj_new=child_new)
+    return ChildInDB.from_orm(result)
 
 @router.get("/{child_id}", response_model=ChildWithParent | None)
 async def read_child(
     child_id: int,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB | None:
-     return await child_repo.read(id=child_id)
+     result = await child_repo.read(id=child_id)
+     return ChildWithParent.from_orm(result) if result else None
 
 @router.patch("/{child_id}", response_model=ChildInDB)
 async def update_child(
@@ -39,18 +41,21 @@ async def update_child(
     child_update: ChildUpdate,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB:
-    return await child_repo.update(id=child_id, obj_update=child_update)
+    result = await child_repo.update(id=child_id, obj_update=child_update)
+    return ChildInDB.from_orm(result)
     
 @router.delete("/{child_id}", response_model=ChildInDB)
 async def delete_child(
     child_id: int,
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> ChildInDB:
-    return await child_repo.delete(id=child_id)
+    result = await child_repo.delete(id=child_id)
+    return ChildInDB.from_orm(result)
 
 @router.get("/", response_model=List[ChildInDB])
 async def list_children(
     child_filter = FilterDepends(ChildFilter),
     child_repo: ChildRepository = Depends(get_repository(ChildRepository)),
 ) -> List[ChildInDB]:
-    return await child_repo.filtered_list(list_filter=child_filter)
+    result = await child_repo.filtered_list(list_filter=child_filter)
+    return [ChildInDB.from_orm(child) for child in result]

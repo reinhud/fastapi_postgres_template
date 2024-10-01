@@ -25,7 +25,8 @@ async def create_parent(
     parent_new: ParentCreate,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> ParentInDB:
-    return await parent_repo.create(obj_new=parent_new)
+    result =  await parent_repo.create(obj_new=parent_new)
+    return ParentInDB.from_orm(result)
 
 
 @router.get("/{parent_id}", response_model=ParentWithChildren)
@@ -33,7 +34,8 @@ async def read_parent(
     parent_id: int,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> ParentWithChildren:
-    return await parent_repo.read(id=parent_id)
+    result = await parent_repo.read(id=parent_id)
+    return ParentWithChildren.from_orm(result)
 
 
 @router.patch("/{parent_id}", response_model=ParentInDB)
@@ -42,7 +44,8 @@ async def update_parent(
     parent_update: ParentUpdate,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> ParentInDB:
-    return await parent_repo.update(id=parent_id, obj_update=parent_update)
+    result = await parent_repo.update(id=parent_id, obj_update=parent_update)
+    return ParentInDB.from_orm(result)
 
 
 @router.delete("/{parent_id}", response_model=ParentInDB)
@@ -50,7 +53,8 @@ async def delete_parent(
     parent_id: int,
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> ParentInDB:
-    return await parent_repo.delete(id=parent_id)
+    result = await parent_repo.delete(id=parent_id)
+    return ParentInDB.from_orm(result)
 
 
 @router.get("/", response_model=List[ParentInDB])
@@ -58,7 +62,8 @@ async def list_parents(
     parent_filter = FilterDepends(ParentFilter),
     parent_repo: ParentRepository = Depends(get_repository(ParentRepository)),
 ) -> List[ParentInDB]:
-    return await parent_repo.filtered_list(parent_filter)
+    result = await parent_repo.filtered_list(parent_filter)
+    return [ParentInDB.from_orm(parent) for parent in result]
 
 
 # # Basic relationship pattern endpoint
